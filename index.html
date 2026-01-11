@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher-Talk Lite: Verification Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="header-content">
+                <h1>Cipher-Talk Lite</h1>
+                <p>Verification Assistant</p>
+            </div>
+        </header>
+
+        <main>
+            <!-- Start Screen -->
+            <section id="start-screen" class="screen active">
+                <h2>Welcome to Cipher-Talk Lite</h2>
+                <p>Your personal assistant for verifying suspicious calls. This tool empowers you to detect potential fraud by analyzing caller behavior, voice characteristics, and human presence.</p>
+                <p><strong>Remember:</strong> This app does not intercept calls. Use it when you receive a suspicious call to verify the caller in real-time by following the on-screen challenges.</p>
+                <button id="start-verification-btn" class="btn primary">Start Verification</button>
+            </section>
+
+            <!-- Verification Dashboard -->
+            <section id="verification-dashboard" class="screen">
+                <div class="dashboard-layout">
+                    <!-- Left Panel: Camera Feed & Status -->
+                    <div class="left-panel">
+                        <h3>Your Live Feed</h3>
+                        <div class="camera-feed-container">
+                            <video id="user-camera-feed" autoplay muted playsinline></video>
+                            <div class="camera-overlay">
+                                <span id="camera-status" class="status-message info">Waiting for camera...</span>
+                            </div>
+                        </div>
+                        <div class="status-box">
+                            <h4>Current Status:</h4>
+                            <p id="current-overall-status" class="status-message info">Awaiting user action to begin.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Steps & Results -->
+                    <div class="right-panel">
+                        <h2>Verification Flow</h2>
+
+                        <!-- Step 1: Gesture Challenge -->
+                        <div class="step-card" id="step-gesture">
+                            <div class="step-header">
+                                <h3>Step 1: Gesture Challenge</h3>
+                                <span id="gesture-step-status" class="status-indicator pending">Pending</span>
+                            </div>
+                            <p id="gesture-instruction">Please enable your camera to begin the gesture challenge.</p>
+                            <div class="gesture-actions">
+                                <button id="simulate-gesture-pass" class="btn success" disabled>Simulate Pass</button>
+                                <button id="simulate-gesture-fail" class="btn danger" disabled>Simulate Fail</button>
+                                <p class="help-text">
+                                    <em>(Simulation: In a real scenario, this step would use OpenCV on the backend to verify your gestures.)</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Latency Check -->
+                        <div class="step-card" id="step-latency" style="display: none;">
+                            <div class="step-header">
+                                <h3>Step 2: Latency Check</h3>
+                                <span id="latency-step-status" class="status-indicator pending">Pending</span>
+                            </div>
+                            <p><strong>Instruction:</strong> On the call, say "<span class="highlight">Ab phone ghumao</span>" (Now turn the phone) right after completing the gesture challenge.</p>
+                            <div class="audio-visualizer-container">
+                                <canvas id="audio-visualizer-canvas" width="200" height="50"></canvas>
+                                <p id="sound-detection-status" class="status-message info">Waiting for sound spike...</p>
+                            </div>
+                            <button id="simulate-latency-detect" class="btn primary" disabled>Simulate Sound Detection</button>
+                            <p class="help-text">
+                                <em>(Simulation: Your microphone will detect a sound spike and compare its timing with the gesture challenge completion.)</em>
+                            </p>
+                        </div>
+
+                        <!-- Step 3: Audio FFT (AI Voice Detection) -->
+                        <div class="step-card" id="step-audio-fft" style="display: none;">
+                            <div class="step-header">
+                                <h3>Step 3: Audio FFT (AI Voice Detection)</h3>
+                                <span id="audio-fft-step-status" class="status-indicator pending">Pending</span>
+                            </div>
+                            <p id="audio-fft-result" class="status-message info">Analyzing caller's voice for authenticity...</p>
+                            <div class="audio-fft-actions">
+                                <button id="simulate-audio-human" class="btn success" disabled>Simulate Human Voice</button>
+                                <button id="simulate-audio-synthetic" class="btn danger" disabled>Simulate Synthetic Voice</button>
+                            </div>
+                            <p class="help-text">
+                                <em>(Simulation: In a real scenario, Web Audio API would capture incoming audio for FFT analysis.)</em>
+                            </p>
+                        </div>
+
+                        <!-- Step 4: Behavioral Analysis -->
+                        <div class="step-card" id="step-behavioral" style="display: none;">
+                            <div class="step-header">
+                                <h3>Step 4: Behavioral Analysis</h3>
+                                <span id="behavioral-step-status" class="status-indicator pending">Pending</span>
+                            </div>
+                            <p>Observe the caller's behavior during the call:</p>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="behavior-urgency"> Caller is asking for urgency?</label>
+                                <label><input type="checkbox" id="behavior-avoiding"> Caller avoiding verification?</label>
+                                <label><input type="checkbox" id="behavior-money-otp"> Caller asking for money / OTP?</label>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Knowledge Challenge -->
+                        <div class="step-card" id="step-knowledge" style="display: none;">
+                            <div class="step-header">
+                                <h3>Step 5: Knowledge Challenge</h3>
+                                <span id="knowledge-step-status" class="status-indicator pending">Pending</span>
+                            </div>
+                            <p><strong>Suggestion:</strong> Ask the caller a personal question only you both would know the answer to.</p>
+                            <p>How did the caller respond?</p>
+                            <div class="radio-group">
+                                <label><input type="radio" name="knowledge-result" value="correct"> Correct Answer</label>
+                                <label><input type="radio" name="knowledge-result" value="wrong"> Wrong Answer</label>
+                                <label><input type="radio" name="knowledge-result" value="avoided"> Avoided / Refused</label>
+                            </div>
+                        </div>
+
+                        <!-- Results Summary -->
+                        <div class="results-summary-card">
+                            <h3>Overall Trust Score</h3>
+                            <div id="trust-score-gauge" class="trust-score-gauge">
+                                <div class="gauge-fill"></div>
+                                <div class="score-label" id="score-percentage">0%</div>
+                            </div>
+                            <p id="final-message" class="final-message info">Proceed through the steps to calculate the Trust Score.</p>
+                            <button id="reset-verification-btn" class="btn secondary" style="display: none;">Start New Verification</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Cipher-Talk Lite. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+/* General Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f7f6; /* Light background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top initially */
+    min-height: 100vh;
+    padding: 20px;
+}
+
+#app {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 40px); /* Adjust based on padding */
+}
+
+/* Header */
+header {
+    background-color: #2c3e50; /* Dark blue */
+    color: #ecf0f1; /* Light gray */
+    padding: 20px 30px;
+    border-bottom: 1px solid #1a242f;
+    text-align: center;
+}
+
+.header-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+header h1 {
+    font-size: 2.2em;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+header p {
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* Main Content Area */
+main {
+    flex-grow: 1;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Screens (Start / Dashboard) */
+.screen {
+    width: 100%;
+    display: none; /* Hidden by default */
+}
+
+.screen.active {
+    display: block; /* Shown when active */
+}
+
+/* Start Screen Specifics */
+#start-screen {
+    text-align: center;
+    max-width: 700px;
+    margin: auto;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+#start-screen h2 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+#start-screen p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+#start-screen p strong {
+    color: #e74c3c; /* Red for emphasis */
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+}
+
+.btn.primary {
+    background-color: #3498db; /* Blue */
+    color: #ffffff;
+}
+
+.btn.primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn.success {
+    background-color: #2ecc71; /* Green */
+    color: #ffffff;
+}
+
+.btn.success:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
+
+.btn.danger {
+    background-color: #e74c3c; /* Red */
+    color: #ffffff;
+}
+
+.btn.danger:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+.btn.secondary {
+    background-color: #95a5a6; /* Gray */
+    color: #ffffff;
+}
+
+.btn.secondary:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Left panel (camera) smaller, right panel (steps) larger */
+    gap: 30px;
+    width: 100%;
+}
+
+.left-panel, .right-panel {
+    padding: 20px;
+    background-color: #fcfcfc;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Left Panel: Camera Feed */
+.left-panel h3 {
+    font-size: 1.4em;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.camera-feed-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 4:3 aspect ratio */
+    background-color: #34495e; /* Dark background for video area */
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#user-camera-feed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure video fills container */
+    transform: scaleX(-1); /* Mirror user's camera */
+}
+
+.camera-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 1.2em;
+    pointer-events: none; /* Allow clicks to pass through */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
+
+#user-camera-feed:not([srcObject]) + .camera-overlay {
+    opacity: 1; /* Show overlay when video is not playing */
+}
+
+.status-box {
+    background-color: #e8f4f2;
+    border-left: 5px solid #2ecc71;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.status-box h4 {
+    font-size: 1.1em;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.status-message {
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.status-message.info {
+    background-color: #e0f2f7;
+    color: #2196f3;
+}
+.status-message.success {
+    background-color: #e8f4e8;
+    color: #4caf50;
+}
+.status-message.warning {
+    background-color: #fff3e0;
+    color: #ff9800;
+}
+.status-message.error {
+    background-color: #ffebee;
+    color: #f44336;
+}
+
+/* Right Panel: Steps */
+.step-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+}
+
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 10px;
+}
+
+.step-card h3 {
+    font-size: 1.3em;
+    color: #34495e;
+    font-weight: 600;
+}
+
+.status-indicator {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-indicator.pending {
+    background-color: #f0f0f0;
+    color: #777;
+}
+.status-indicator.in-progress {
+    background-color: #e0f7fa;
+    color: #00bcd4;
+}
+.status-indicator.completed {
+    background-color: #e8f5e9;
+    color: #4caf50;
+}
+.status-indicator.failed {
+    background-color: #ffebee;
+    color: #f44336;
+}
+.status-indicator.skipped {
+    background-color: #fce4ec;
+    color: #e91e63;
+}
+
+
+.step-card p {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.step-card .btn {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.highlight {
+    background-color: #fffde7;
+    color: #fbc02d;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.help-text {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 15px;
+    border-top: 1px dashed #eee;
+    padding-top: 10px;
+}
+
+/* Audio Visualizer */
+.audio-visualizer-container {
+    background-color: #f0f4f7;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    position: relative;
+}
+
+#audio-visualizer-canvas {
+    width: 100%;
+    height: 50px;
+    background-color: #e0e6eb;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+/* Checkbox/Radio Groups */
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.checkbox-group label, .radio-group label {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    color: #444;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"],
+.radio-group input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #3498db; /* Custom color for checked state */
+    transform: scale(1.2);
+}
+
+/* Results Summary Card */
+.results-summary-card {
+    background-color: #eef7fc; /* Light blue background */
+    border: 1px solid #b3e5fc; /* Matching border */
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.results-summary-card h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Trust Score Gauge */
+.trust-score-gauge {
+    position: relative;
+    width: 150px;
+    height: 75px; /* Half circle */
+    background: #e0e0e0;
+    border-radius: 75px 75px 0 0; /* Top half circle */
+    overflow: hidden;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.gauge-fill {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #e74c3c, #f1c40f, #2ecc71); /* Red, Yellow, Green */
+    transform-origin: bottom center;
+    clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%); /* Initial clip */
+    transition: clip-path 0.8s ease-out;
+}
+
+.score-label {
+    position: relative; /* To appear above gauge-fill */
+    z-index: 1;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #333;
+    padding-bottom: 10px;
+}
+
+.final-message {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 20px;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 0.9em;
+    border-top: 1px solid #eee;
+    margin-top: auto; /* Push footer to bottom */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr; /* Stack panels on smaller screens */
+    }
+
+    .left-panel {
+        order: -1; /* Move camera feed to top */
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+    header p {
+        font-size: 1em;
+    }
+    #app {
+        padding: 10px;
+        min-height: calc(100vh - 20px);
+    }
+    main {
+        padding: 20px;
+    }
+    #start-screen {
+        padding: 20px;
+    }
+    #start-screen h2 {
+        font-size: 2em;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    header {
+        padding: 15px 20px;
+    }
+    main {
+        padding: 15px;
+    }
+    .left-panel, .right-panel {
+        padding: 15px;
+    }
+    .step-card {
+        padding: 15px;
+    }
+    .step-card h3 {
+        font-size: 1.1em;
+    }
+    .status-indicator {
+        font-size: 0.75em;
+        padding: 3px 8px;
+    }
+    .camera-feed-container {
+        padding-top: 56.25%; /* 16:9 aspect ratio for mobile */
+    }
+    .gauge-fill {
+        /* Adjust for mobile if needed */
+    }
+    .score-label {
+        font-size: 1.2em;
+    }
+}
